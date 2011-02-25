@@ -1,0 +1,19 @@
+#/bin/bash
+
+for i in $(ls)
+do
+    rar_files=$(ls $i/*.rar 2> /dev/null)
+    count=$(ls -l $i/*.rar 2> /dev/null | wc -l)
+
+    if [ "$count" -gt "1" ]; then
+        rar_files=$(ls $i/*part01.rar 2> /dev/null)
+        count=$(ls -l $i/*part01.rar 2> /dev/null | wc -l )
+        if [ "$count" -gt "1" ]; then
+            echo "Multiple rar files found, don't know what to do! [$count]"
+        elif [ "$count" -eq "1" ]; then
+            unrar e $rar_files
+        fi
+    elif [ "$count" -eq "1" ]; then
+        unrar e $rar_files
+    fi
+done

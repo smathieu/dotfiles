@@ -1,0 +1,391 @@
+#!/usr/bin/perl
+#######################################################################
+#
+#  File:                 mkv2mp4.pl
+#  Edited by:            Jeff Wallace   (jeff AT tjwallace DOT ca)
+#  Original Author(s):   Justin Randall (randall311 AT yahoo DOT com)
+#                        Josh Carroll   (josh.carroll AT gmail DOT com)
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+#
+#######################################################################
+use warnings;
+use strict;
+use Getopt::Long;
+use POSIX qw(floor);
+use Cwd qw(realpath);
+use File::Basename;
+
+my $prog = $0;
+$prog =~ s/.*\///img;
+
+# set the input based off the command arguments
+my ($opt_in, $opt_2ch, $opt_nosplit, $opt_noremix);
+
+GetOptions(	'in=s' => \$opt_in,
+		'2ch' => \$opt_2ch,
+		'nosplit' => \$opt_nosplit,
+		'noremix' => \$opt_noremix);
+
+if (!$opt_in) {
+   print "Usage: $prog -in <maktrosa input file> [-2ch -nosplit -noremix]\n";
+   print "[-2ch]: Re-encode audio to 2 channels\n";
+   print "[-nosplit]: Do NOT split the final MP4 file\n";
+   print "[-noremix]: Do NOT remix the surround sound channels\n";
+   exit 0;
+}
+
+my($name, $path, $suffix) = fileparse($opt_in, qr{\..*});
+
+if ($suffix eq '') {
+   print "input file did not contain a suffix!\n";
+   exit -1;
+}
+
+# remove file extension from input file
+my $char = 0;
+my $basename = $opt_in;
+while ($char ne '.') {
+   $char = chop $basename;
+}
+
+# temoprary files and variables
+my $opt_tmp = $basename;
+$opt_tmp = "$opt_tmp";
+my $opt_out = "$basename.mp4";
+my $tmp_h264 = "$name.h264";
+my $tmp_wav_fifo = "$name.wav";
+my $tmp_aac = "$name.aac";
+
+# make sure we have all the tools
+check_required_tools();
+
+# make sure the mkv file is correct format
+tprint("Checking input file format...\n");
+check_resolution($opt_in);
+
+tprint("Extracting mkv file...\n");
+# get the fps of the video and the duration (in seconds) of the MKV, and extract the mkv (if only re-muxing to mp4 with aac)
+my ($vid_fps,$duration,$channels) = extract_mkv($opt_in, $tmp_h264, 0,0);
+
+# modify h264 header to change level_idc to 0x29
+tprint("Changing h.264 stream's level_idc header...\n");
+change_h264_level($tmp_h264);
+
+tprint("Converting audio to aac...\n");
+conv_to_aac($opt_in, $tmp_aac, $channels);
+
+tprint("Creating mp4 file...\n");
+create_mp4($tmp_h264, $tmp_aac, $vid_fps, $opt_out);
+
+# cleanup and finsh processing
+tprint("Cleaning up tmp files...\n");
+unlink($tmp_h264,$tmp_wav_fifo,$tmp_aac);
+tprint("Done!\n");
+
+##############################################################################
+# check the mkv file format
+##############################################################################
+sub check_resolution {
+   my $mkv = shift;
+
+   my $output = `mkvinfo "$mkv" 2>&1`;
+   chomp($output);
+
+   my $width = 0;
+   if($output =~ /Pixel width:\s+(\d+)/i) {
+      $width = $1;
+      print "MSG - MkvInfo pixel width - $width \n";
+   }
+   if($width == 0) {
+      print "Could not determine video width. mkvinfo parsing failed. mkvinfo output:\n\n$output\n";
+      exit 1;
+   }
+
+   my $height = 0;
+   if($output =~ /Pixel height:\s+(\d+)/i) {
+      $height = $1;
+      print "MSG - MkvInfo pixel height - $height \n";
+   }
+   if($height == 0) {
+      print "Could not determine video width. mkvinfo parsing failed. mkvinfo output:\n\n$output\n";
+      exit 1;
+   }
+
+   if($height % 16) {
+      print "Error, height must be a multiple of 16 for the PS3 to recognize the file.\n";
+      print "Consider using ffmpeg/mencoder to crop this video first.\n";
+      exit 1;
+   }
+}
+
+##############################################################################
+# extract the video and audio raw tracks from the mkv continer
+##############################################################################
+sub extract_mkv {
+   my ($in, $h264, $dont_extract, $channels) = @_;
+
+   my $fps = -1;
+   my $duration = -1;
+   my $type = undef;
+   my $audio_type = undef;
+   my $video_type = undef;
+
+   my ($audio_track_num, $h264_track_num) = (-1, -1);
+   my ($found_video, $found_audio) = (0,0);
+
+   my $cur_audio = 0;
+   my $cur_video = 0;
+
+   # find out which track is which
+   my $curr_track_num = -1;
+
+   my @output = `mkvinfo "$in" 2>&1`;
+   chomp(@output);
+   foreach my $line (@output) {
+      if($found_video && $channels && $found_audio && $fps != -1 && defined $audio_type) {
+         last;
+      }
+      if($line =~ /Default duration.*\((\d+\.\d+)\s*fps/i) {
+         my $tmp = $1;
+         if($type =~ /video/i) {
+            $fps = $tmp;
+		if($fps == -1) {
+		      print "Error, could not determine input MKV fps\n";
+		      exit 1;
+		   }
+            print "MSG - MkvInfo Video - fps: $fps\n";
+         }
+      } elsif($line =~ /^\s*\|\s*\+\s*Duration:\s*(\d+\.\d+)\s*s\s+/i) {
+         $duration = $1;
+      } elsif($line =~ /Track number:\s+(\d+)/i) {
+         $curr_track_num = $1;
+         next;
+      } elsif($line =~ /Track type:\s+(\S+)/i) {
+         if($curr_track_num == -1) {
+            # we haven't found the track # yet, but we found the type.
+            # this shouldn't happen
+            print "Error, mkvinfo failed.\n";
+            exit 1;
+         }
+         $type = $1;
+         if($type =~ /audio/i) {
+            if(! $found_audio) {
+               $audio_track_num = $curr_track_num;
+               $found_audio = 1;
+               $cur_video = 0;
+               $cur_audio = 1;
+            }
+         } else {
+            if(! $found_video) {
+               $h264_track_num = $curr_track_num;
+               $found_video = 1;
+               $cur_video = 1;
+               $cur_audio = 0;
+            }
+         }
+      } elsif($found_audio && $cur_audio && $line =~ /Codec ID:\s+(\S+)/i) {
+         $audio_type = $1;
+         print "MSG - MkvInfo Audio - $audio_type Track: $audio_track_num\n";
+      } elsif($found_video && $cur_video && $line =~ /Codec ID:\s+(\S+)/i) {
+         $video_type = $1;
+         print "MSG - MkvInfo Video - $video_type Track: $h264_track_num\n";
+      }
+
+      if ($line =~ /Channels:\s+(\d+)/i) {
+         $channels = $1;
+         if ($channels == 6) {
+            print "MSG - MkvInfo Audio Channels - 6 - (Dolby 5.1 / DTS)\n";
+         } else {
+            print "MSG - MkvInfo Audio Channels - 2 - (Stereo 2.1)\n";
+         }
+      }
+   }
+
+   if($fps == -1 || $duration == -1 || $audio_track_num == -1 || $h264_track_num == -1) {
+      print "mkvinfo parsing failed. mkvinfo output:\n\n" . join("\n", @output), "\n";
+      exit 1;
+   }
+
+   my $audio_file;
+
+   if ($audio_type ne "A_DTS" && $audio_type ne "A_AC3") {
+      if ($audio_type eq "A_AAC") {
+          print "No audio channel remix needed...\n";
+          #$opt_noremix = 1;
+      } else {
+          print "Error: invalid audio type in mkv: $audio_type\n";
+          exit 1;
+      }
+   }
+
+    print "mkvextract tracks \"$in\" $h264_track_num:$tmp_h264\n";
+
+   my $output = `mkvextract tracks "$in" $h264_track_num:$tmp_h264`;
+
+   if($?) {
+      print "Error, mkvextract failed! output:\n\n$output\n";
+      exit 1;
+   }
+
+   return ($fps, $duration, $channels);
+}
+
+##############################################################################
+# change h264 header level_idc to 0x29
+##############################################################################
+sub change_h264_level {
+   my $file = shift;
+   open my $fh, "+< $file" or die "Cannot open temporary h264 file\n";
+   sysseek($fh, 7, 0);
+   syswrite($fh,"\x29",1);
+   close($fh);
+}
+
+##############################################################################
+# convert audio AC3 -> WAV -> AAC
+##############################################################################
+sub conv_to_aac {
+	my ($in, $aac, $channels) = @_;
+
+	my $fifo = $tmp_wav_fifo;
+	print "Making fifo: $fifo\n";
+	system("mkfifo $fifo");
+
+	if($?) {
+		print "mkfifo failed -- $!\n";
+		exit 1;
+	}
+
+	if ($channels == 6 && !$opt_2ch) {
+		my $channelstr;
+		if ($opt_noremix) {
+	   		$channelstr = "";
+		} else {
+	   		$channelstr = "-af channels=6:6:0:0:1:1:2:4:3:5:4:2:5:3";
+		}
+		print "neroAacEnc -ignorelength -q 1.0 -if $fifo -of $aac & mplayer $in $channelstr -vo null -vc null -ao pcm:fast:waveheader:file=$fifo -channels 6 -novideo\n";
+
+		my $output = `neroAacEnc -ignorelength -q 1.0 -if $fifo -of $aac & mplayer $in $channelstr -vo null -vc null -ao pcm:fast:waveheader:file=$fifo -channels 6 -novideo`;
+
+		if($?) {
+			tprint("mplayer/nero conversion to aac failed: $output\n");
+			exit 1;
+		}
+	} else {
+		print "neroAacEnc -ignorelength -q 1.0 -if $fifo -of $aac & mplayer $in -vo null -vc null -ao pcm:fast:waveheader:file=$fifo -channels $channels -novideo\n";
+
+		my $output = `neroAacEnc -ignorelength -q 1.0 -if $fifo -of $aac & mplayer -vo null -vc null $in -ao pcm:fast:waveheader:file=$fifo -channels $channels -novideo`;
+
+		if($?) {
+			tprint("mplayer/nero conversion to aac failed: $output\n");
+			exit 1;
+		}
+	}
+
+	my $strfix = substr($aac,0,rindex($aac,"."));
+
+	print("MP4Box -raw 1 $aac\n");
+	system("MP4Box -raw 1 $aac");
+	print("mv ${strfix}_track1.aac $aac");
+	system("mv ${strfix}_track1.aac $aac");
+
+	# clean up the fifo and the ac3/dts file to save on disk space
+	unlink($fifo);
+}
+
+##############################################################################
+# remux the video and audio tracks in the mp4 format
+##############################################################################
+sub create_mp4 {
+   my ($h264, $aac, $fps, $outf) = @_;
+
+   # size of h264 + aac
+   my $total_size = 0;
+
+   # split the file into 3.5 G chunks to avoid problems with
+   # PS3 playback of 4G files, this is the size in KB
+   my $split_size = 3942400;
+
+   my $split = 0;
+
+   if (! $opt_nosplit) {
+	   # find out how big the existing file is. If it's less than
+	   # our split size, then don't bother splitting it
+	   my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+	      $atime,$mtime,$ctime,$blksize,$blocks) = stat($h264);
+
+	   $total_size += $size;
+
+	   ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+	      $atime,$mtime,$ctime,$blksize,$blocks) = stat($aac);
+
+	   $total_size += $size;
+
+	   # normalize to KB for comparison
+	   $total_size /= 1024;
+	   if($total_size > $split_size) {
+	      $split = 1;
+	   }
+   }
+
+   my $split_str = "";
+   if($split) {
+      $split_str = "-splits $split_size";
+   } else {
+      $split_str = "";
+   }
+
+   my $cmd = "MP4Box $split_str -add $h264 -add $aac -fps $fps -nosys -new \"$outf\" 2>&1";
+   print "$cmd\n";
+
+   my $output = `$cmd`;
+   if($?) {
+      print "MP4Box creation of mp4 failed! output:\n\n$output\n";
+      exit 1;
+   }
+}
+
+##############################################################################
+# make sure we have all the tools for the job
+##############################################################################
+sub check_required_tools {
+
+   my $errors = 0;
+
+   my @required = qw(mkvinfo mkvextract mplayer MP4Box neroAacEnc);
+   foreach my $req_prog (@required) {
+      my $found = 0;
+      foreach my $path_ent (split(/:/, $ENV{PATH})) {
+         if(-r "$path_ent/$req_prog") {
+            $found = 1;
+            last;
+         }
+      }
+      if(! $found) {
+         $errors++;
+         print "Error, required program: $req_prog not found. Please install it.\n";
+      }
+   }
+
+   if($errors > 0) {
+      exit 1;
+   }
+}
+
+##############################################################################
+# print status messages during remux process
+##############################################################################
+sub tprint {
+   my $msg = shift;
+
+   print $msg;
+}

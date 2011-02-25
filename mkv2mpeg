@@ -1,0 +1,24 @@
+#!/bin/bash
+
+INPUT="$1"
+OUTPUT="$2"
+VIDEO_CODEC="mpeg2video"
+VIDEO_FPS=`mkvinfo $1 | grep -A 10 'Codec ID: V_MPEG4' | grep -w fps | awk '{print $6}' | cut -d'(' -f2`
+
+mkvinfo $INPUT | grep -qE 'Codec ID.*DTS'
+
+if [ $? -eq 0 ]; then
+AUDIO_CODEC="ac3"
+AUDIO_BITRATE="-ab 640k"
+AUDIO_FREQ="-ar 48000"
+AUDIO_CHANNELS="-ac 6"
+else
+AUDIO_CODEC="copy"
+AUDIO_BITRATE=""
+AUDIO_FREQ=""
+AUDIO_CHANNELS=""
+fi
+
+FORMAT="dvd"
+
+ffmpeg -threads 8 -i "${INPUT}" -vcodec ${VIDEO_CODEC} -r ${VIDEO_FPS} -sameq -acodec $AUDIO_CODEC $AUDIO_BITRATE $AUDIO_FREQ $AUDIO_CHANNELS -scodec copy -f ${FORMAT} - > "${OUTPUT}"
