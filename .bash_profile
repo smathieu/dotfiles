@@ -60,3 +60,6 @@ export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJD
 export PATH="$EC2_HOME/bin:$PATH"
 
 alias src='cd /Users/simon/Documents/code/web'
+alias git_no_ws="git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
