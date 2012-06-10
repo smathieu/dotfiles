@@ -29,17 +29,29 @@ ZSH_THEME="smathieu"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git bundler brew)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+# Customize to your needs...
+export PATH=/Users/simon/aws/ec2/bin:/opt/local/bin:/opt/local/sbin:/Users/simon/bin:/usr/local/mysql/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/local/git/bin:/Users/simon/ec2-api-tools-1.4.4.0/bin:/Users/simon/.rvm/bin
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
-KSDIFF=/Applications/Kaleidoscope.app/Contents/MacOS/ksdiff
-if [ -e $KSDIFF ]; then
-    export DIFF=$KSDIFF
-fi
+alias g=" ./script/generate"
+alias be="bundle exec"
+alias guard="bundle exec guard"
+alias rake="bundle exec rake"
+alias rails="bundle exec rails"
+alias cap="bundle exec cap"
+export DIFF=/Applications/Kaleidoscope.app/Contents/MacOS/ksdiff
 
-alias src='cd /Users/simon/Documents/pagerduty/pagerduty/'
-alias git_no_ws='git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch'
+export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
+export EC2_HOME="$HOME/aws/ec2"
+export EC2_CERT="$HOME/aws/keys/cert-7E4KLFVENMECELH5J2MNCWEVO7AGKA4A.pem"
+export EC2_PRIVATE_KEY="$HOME/aws/keys/pk-7E4KLFVENMECELH5J2MNCWEVO7AGKA4A.pem"
+export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home"
+
+alias src='cd /Users/simon/Documents/code/web'
+alias git_no_ws="git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch"

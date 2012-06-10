@@ -1,0 +1,13 @@
+[alias]
+    st = status
+    co = checkout
+    b = branch
+    aa = add --all
+    dh = diff HEAD
+[diff]
+    external = /Users/simon/bin/git-diff
+
+[user]
+    name = Simon Mathieu
+    email = simon.math@gmail.com
+    username = smathieu
