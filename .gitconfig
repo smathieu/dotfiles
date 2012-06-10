@@ -4,8 +4,9 @@
     b = branch
     aa = add --all
     dh = diff HEAD
+    r = reset
 [diff]
-    external = /Users/simon/bin/git-diff
+    external = ~/bin/git-diff
 
 [user]
     name = Simon Mathieu
