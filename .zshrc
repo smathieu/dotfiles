@@ -29,17 +29,24 @@ ZSH_THEME="smathieu"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git bundler brew)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
-KSDIFF=/Applications/Kaleidoscope.app/Contents/MacOS/ksdiff
-if [ -e $KSDIFF ]; then
-    export DIFF=$KSDIFF
+if [ -e  ]; then
+    export DIFF=/Applications/Kaleidoscope.app/Contents/MacOS/ksdiff
 fi
 
 alias src='cd /Users/simon/Documents/pagerduty/pagerduty/'
 alias git_no_ws='git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch'
+alias be='bundle exec'
 
+# Fix MYSQL gem 
+#export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
+export PATH=/opt/local/bin:/opt/local/sbin:/Users/simon/bin:$PATH
+export PATH=/usr/local/bin:$PATH
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+PATH=$PATH:/usr/local/share/npm/bin
