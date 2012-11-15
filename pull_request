@@ -1,0 +1,8 @@
+#!/bin/bash 
+
+ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+branch=${ref#refs/heads/}
+origin=$(git config --get remote.origin.url | sed "s/^.*:\(.*\)\/.*$/\1/g")
+
+git push origin $branch
+hub pull-request -h $origin:$branch

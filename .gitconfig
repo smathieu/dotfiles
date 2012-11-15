@@ -12,3 +12,7 @@
     name = Simon Mathieu
     email = simon.math@gmail.com
     username = smathieu
+[colors]
+	ui = 1
+[color]
+	ui = 1
