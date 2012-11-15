@@ -3,8 +3,5 @@
 # diff is called by git with 7 parameters:
 # path old-file old-hex old-mode new-file new-hex new-mode
 
-echo $*
-echo $2
-echo $5
-"$DIFF" "$2" "$5" | cat
+"$DIFF" "$2" "$5" 
 
