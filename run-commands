@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ ! -p command-pipe ]; then
+  mkfifo command-pipe
+fi
+
+while true; do
+  command=$(cat command-pipe)
+  echo "Running command: $command" 
+  sh -c "$command"
+done

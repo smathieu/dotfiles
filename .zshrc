@@ -15,7 +15,7 @@ ZSH_THEME="smathieu"
 # CASE_SENSITIVE="true"
 
 # Comment this out to disable weekly auto-update checks
-# DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="true"
 
 # Uncomment following line if you want to disable colors in ls
 # DISABLE_LS_COLORS="true"
@@ -39,7 +39,7 @@ if [ -e  ]; then
     export DIFF=/Applications/Kaleidoscope.app/Contents/MacOS/ksdiff
 fi
 
-alias src='cd /Users/simon/Documents/pagerduty/pagerduty/'
+alias src='cd /Users/simon/Documents/doc_project/DocWeb/'
 alias git_no_ws='git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch'
 alias be='bundle exec'
 

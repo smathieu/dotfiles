@@ -1,0 +1,11 @@
+--type-add=ruby=.haml,.rake,.hamlc
+--type-add=css=.less
+--type-add=coffeescript=.coffee
+--type-add=scala=.sbt
+--type-add=scss=.scss
+--type-add=ruby=.rake
+--type-add=ruby=Rakefile
+--ignore-dir=public
+--ignore-dir=tmp
+--ignore-dir=test_files
+--ignore-dir=coverage
