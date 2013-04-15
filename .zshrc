@@ -41,7 +41,7 @@ export PATH=/Users/simon/aws/ec2/bin:/opt/local/bin:/opt/local/sbin:/Users/simon
 alias g=" ./script/generate"
 alias be="bundle exec"
 alias cap="bundle exec cap"
-export DIFF=/Applications/Kaleidoscope.app/Contents/MacOS/ksdiff
+export DIFF=`which ksdiff`
 
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
@@ -57,3 +57,5 @@ alias caduceus="cd $HOME/Documents/code/caduceus"
 alias chef="cd $HOME/Documents/code/chef"
 alias git_no_ws="git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch"
 alias sbt="JAVA_OPTS='-Xmx2548M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1024M' sbt"
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
