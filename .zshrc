@@ -35,9 +35,7 @@ source $ZSH/oh-my-zsh.sh
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
-if [ -e  ]; then
-    export DIFF=/Applications/Kaleidoscope.app/Contents/MacOS/ksdiff
-fi
+export DIFF=`which ksdiff`
 
 alias src='cd /Users/simon/Documents/doc_project/DocWeb/'
 alias git_no_ws='git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch'
@@ -50,3 +48,7 @@ export PATH=/usr/local/bin:$PATH
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:/usr/local/share/npm/bin
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+unsetopt correct_all

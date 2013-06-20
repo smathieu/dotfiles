@@ -7,23 +7,14 @@
     r = reset
 [diff]
     external = ~/bin/git-diff
-
+    prompt = false
 [user]
     name = Simon Mathieu
     email = simon.math@gmail.com
     username = smathieu
 [colors]
-	ui = 1
+    ui = 1
 [color]
-	ui = 1
+    ui = 1
 [difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[difftool]
-	prompt = false
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
-[mergetool]
-	prompt = false
-[merge]
-	tool = Kaleidoscope
+    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
