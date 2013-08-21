@@ -5,6 +5,7 @@
 --type-add=scss=.scss
 --type-add=ruby=.rake
 --type-add=ruby=Rakefile
+--type-add=elixir=.exs
 --ignore-dir=public
 --ignore-dir=tmp
 --ignore-dir=test_files

@@ -8,6 +8,7 @@
 [diff]
     external = ~/bin/git-diff
     prompt = false
+	tool = Kaleidoscope
 [user]
     name = Simon Mathieu
     email = simon.math@gmail.com
@@ -17,4 +18,6 @@
 [color]
     ui = 1
 [difftool "Kaleidoscope"]
-    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false

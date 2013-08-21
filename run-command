@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -p command-pipe ]; then
+  echo $* > command-pipe
+else
+  echo "No command pipe"
+  exit 1
+fi
