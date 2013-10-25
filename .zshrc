@@ -52,3 +52,7 @@ PATH=$PATH:/usr/local/share/npm/bin
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 unsetopt correct_all
+
+if [ -f ~/.zshrc.local ]; then
+    source ~/.zshrc.local
+fi
