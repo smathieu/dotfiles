@@ -56,3 +56,5 @@ unsetopt correct_all
 if [ -f ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
+
+export GOPATH=`pwd`

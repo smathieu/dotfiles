@@ -1,7 +1,21 @@
 #!/bin/bash
 
-if [ -p command-pipe ]; then
-  echo $* > command-pipe
+upsearch () {
+  slashes=${PWD//[^\/]/}
+  directory="$PWD"
+  for (( n=${#slashes}; n>0; --n ))
+  do
+    test -e "$directory/$1" && echo "$directory/$1" && return
+    directory="$directory/.."
+  done
+}
+
+PIPE=$(upsearch 'command-pipe')
+
+echo "Pipe is $PIPE"
+
+if [ -p $PIPE ]; then
+  echo $* > $PIPE
 else
   echo "No command pipe"
   exit 1
