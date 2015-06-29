@@ -11,3 +11,10 @@
 --ignore-dir=tmp
 --ignore-dir=test_files
 --ignore-dir=coverage
+--ignore-dir=node_modules
+--ignore-dir=bower
+--ignore-dir=spec/reports
+--ignore-dir=features/reports
+--ignore-dir=logs
+--ignore-dir=log
+--ignore-file=is:tags
