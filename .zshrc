@@ -40,7 +40,7 @@ export DIFF=`which ksdiff`
 alias src='cd /Users/simon/Documents/doc_project/DocWeb/'
 alias git_no_ws='git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch'
 alias be='bundle exec'
-alias by='bundle update'
+alias bu='bundle update'
 
 # Fix MYSQL gem 
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
