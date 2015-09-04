@@ -40,10 +40,11 @@ export DIFF=`which ksdiff`
 alias src='cd /Users/simon/Documents/doc_project/DocWeb/'
 alias git_no_ws='git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch'
 alias be='bundle exec'
+alias bu='bundle update'
 
 # Fix MYSQL gem 
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
-export PATH=/opt/local/bin:/opt/local/sbin:/Users/simon/bin:$PATH
+export PATH=/opt/local/bin:/opt/local/sbin:$HOME/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
@@ -57,7 +58,7 @@ if [ -f ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
 
-export GOPATH="/Users/simon/Documents/code/"
-
 # added by travis gem
 [ -f /Users/simon/.travis/travis.sh ] && source /Users/simon/.travis/travis.sh
+
+export GOPATH=`pwd`

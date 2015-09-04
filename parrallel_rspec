@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function run_spec() {
+  spec=$1
+  bundle exec rspec $spec > /dev/null 2>&1
+  if [[ $? -ne 0 ]]; then
+    echo $spec failed
+  fi
+}
+
+export -f run_spec
+
+maxjobs=8
+
+find spec -name '*_spec.rb' | xargs -n 1 -I % -P $maxjobs bash -c 'run_spec "%"'
+
+
