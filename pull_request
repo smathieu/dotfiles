@@ -5,4 +5,4 @@ branch=${ref#refs/heads/}
 origin=$(git config --get remote.origin.url | sed "s/^.*:\(.*\)\/.*$/\1/g")
 
 git push origin $branch
-hub pull-request -h $origin:$branch -b 'develop'
+hub pull-request -h $origin:$branch -b 'master'

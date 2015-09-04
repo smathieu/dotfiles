@@ -56,3 +56,8 @@ unsetopt correct_all
 if [ -f ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
+
+export GOPATH="/Users/simon/Documents/code/"
+
+# added by travis gem
+[ -f /Users/simon/.travis/travis.sh ] && source /Users/simon/.travis/travis.sh
