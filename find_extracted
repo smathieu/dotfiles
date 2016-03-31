@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+def dir_size(dir)
+  paths = Dir[File.join(dir, "**/*")]
+  paths.map {|p| File.size(p) }.inject(:+)
+end
+
+films = Dir["**/*.mkv"]
+
+for film in films
+  file_size = File.size(film)
+  dir = File.dirname(film)
+  dir_size = dir_size(dir)
+
+  if dir_size.nil?
+    # puts "Can't find the size of #{dir}"
+  end
+
+  if dir_size && file_size * 1.5 < dir_size
+    #puts "#{film} #{file_size} #{dir_size}"
+    puts film
+  end
+end
