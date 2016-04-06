@@ -22,4 +22,4 @@
 [difftool]
 	prompt = false
 [core]
-	excludesfile = /Users/smathieu/.gitignore_global
+	excludesfile = ~/bin/.gitignore_global
