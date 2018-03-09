@@ -3,23 +3,25 @@
     co = checkout
     b = branch
     aa = add --all
-    dh = diff HEAD
+    dh = difftool HEAD
+    dt = difftool
     r = reset
 [diff]
-    external = ~/bin/git-diff
-    prompt = false
 	tool = Kaleidoscope
+[difftool]
+	prompt = false
+[difftool "meld"]
+  trustExitCode = true
+  cmd = open -W -a Meld --args \"$LOCAL\" \"$REMOTE\"
 [user]
     name = Simon Mathieu
-	email = simon.mathieu@lookout.com
+	email = simon.mathieu@shopify.com
     username = smathieu
 [colors]
     ui = 1
 [color]
     ui = 1
-[difftool "Kaleidoscope"]
-	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
-[difftool]
-	prompt = false
 [core]
 	excludesfile = ~/bin/.gitignore_global
+[difftool "Kaleidoscope"]
+	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"

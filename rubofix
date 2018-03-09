@@ -1,0 +1,8 @@
+#!/bin/bash
+default_branch=`git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'`
+
+if [[ -z $default_branch ]]; then
+  default_branch="master"
+fi
+
+git diff --name-only $default_branch | xargs bundle exec rubocop -a

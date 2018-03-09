@@ -1,8 +1,20 @@
-#!/bin/bash 
+#!/bin/bash
+# Usage pull_request <branch>
 
 ref=$(git symbolic-ref HEAD 2> /dev/null) || return
 branch=${ref#refs/heads/}
 origin=$(git config --get remote.origin.url | sed "s/^.*:\(.*\)\/.*$/\1/g")
+default_branch=`git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'`
+
+if [[ -z $default_branch ]]; then
+  default_branch="master"
+fi
+
+if [[ -z $1 ]]; then
+  target="$default_branch"
+else
+  target="$1"
+fi
 
 git push origin $branch
-hub pull-request -h $origin:$branch -b 'master'
+hub pull-request -h $origin:$branch -b $target

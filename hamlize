@@ -1,0 +1,8 @@
+#!/bin/bash
+
+while read file; do
+  echo "Processing $file"
+  new=$(echo $file | sed "s/\.erb/.haml/g")
+  eval cat $file | html2haml > $new
+  rm $file
+done
