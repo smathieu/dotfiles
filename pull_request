@@ -16,5 +16,13 @@ else
   target="$1"
 fi
 
+args="-o"
+
+template="$PWD/.github/PULL_REQUEST_TEMPLATE.md"
+
+if [[ -e $template ]]; then
+  args="$args -F $template"
+fi
+
 git push origin $branch
-hub pull-request -h $origin:$branch -b $target
+hub pull-request $args -h $origin:$branch -b $target

@@ -1,6 +1,7 @@
 #. /sw/bin/init.sh 
 export CLICOLOR=1
 
+export GOPATH=$HOME
 
 
 export PATH=$HOME/bin:$PATH

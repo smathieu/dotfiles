@@ -5,4 +5,12 @@ if [[ -z $default_branch ]]; then
   default_branch="master"
 fi
 
-git diff --name-only $default_branch | xargs bundle exec rubocop -a
+if [[ -z $1 ]]; then
+  target="$default_branch"
+else
+  target="$1"
+fi
+
+git diff --name-only $target | \
+  xargs ls -d 2>/dev/null | \
+  xargs bundle exec rubocop -a --force-exclusion
