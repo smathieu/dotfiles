@@ -20,9 +20,12 @@ args="-o"
 
 template="$PWD/.github/PULL_REQUEST_TEMPLATE.md"
 
+git push origin $branch
+
 if [[ -e $template ]]; then
-  args="$args -F $template"
+  url=`hub compare -u $branch`
+  open "$url?expand=1"
+else
+  hub pull-request $args -h $origin:$branch -b $target
 fi
 
-git push origin $branch
-hub pull-request $args -h $origin:$branch -b $target
