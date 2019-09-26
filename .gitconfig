@@ -8,6 +8,7 @@
     r = reset
 [diff]
 	tool = Kaleidoscope
+	algorithm = patience
 [difftool]
 	prompt = false
 [difftool "meld"]
@@ -23,5 +24,12 @@
     ui = 1
 [core]
 	excludesfile = ~/bin/.gitignore_global
+	commitGraph = true
 [difftool "Kaleidoscope"]
 	cmd = ksdiff-wrapper git \"$LOCAL\" \"$REMOTE\"
+[protocol]
+	version = 2
+[credential]
+	helper = osxkeychain
+[gc]
+	writeCommitGraph = true

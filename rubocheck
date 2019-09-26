@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+if [[ -z $SKIP_RUBOCOP ]]; then
+  git status --porcelain | egrep "^(A|AM|^M).+\.(rb|rake|jbuilder)$" | awk '{print $NF}' | xargs rubocop --force-exclusion
+fi
+

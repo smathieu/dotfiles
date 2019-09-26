@@ -18,4 +18,8 @@
 --ignore-dir=.dev
 --ignore-dir=logs
 --ignore-dir=log
+--ignore-dir=vendor
+--ignore-dir=public_html/build
+--ignore-dir=storage
 --ignore-file=is:tags
+--ignore-file=is:.phpstorm.meta.php

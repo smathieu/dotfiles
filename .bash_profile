@@ -22,3 +22,6 @@ alias kit="cd /Users/simonmathieu/src/github.com/Shopify/kit/"
 function run-modified-specs {
   git status -s | grep _spec | awk '{print $2}' | xargs bundle exec rspec
 }
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+if [ -e /Users/simonmathieu/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/simonmathieu/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
