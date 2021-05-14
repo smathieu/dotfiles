@@ -2,6 +2,7 @@
 export CLICOLOR=1
 
 export GOPATH=$HOME
+export ANDROID_HOME=$HOME/Library/Android/sdk/
 
 
 export PATH=$HOME/bin:$PATH
