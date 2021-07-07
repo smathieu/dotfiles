@@ -11,6 +11,6 @@ ln -sf ~/dotfiles/.zshrc ~/.zshrc
 source ~/.zshrc
 
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
-ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
+#ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 ln -sf ~/dotfiles/.ctags ~/.ctags
 
