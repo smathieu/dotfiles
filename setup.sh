@@ -9,3 +9,8 @@ ln -sf ~/dotfiles/.zshrc ~/.zshrc
 
 # Reload zsh config
 source ~/.zshrc
+
+ln -sf ~/dotfiles/.vimrc ~/.vimrc
+ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
+ln -sf ~/dotfiles/.ctags ~/.ctags
+

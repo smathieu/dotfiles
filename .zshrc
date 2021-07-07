@@ -5,7 +5,7 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="smathieu"
+# ZSH_THEME="smathieu"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -43,7 +43,7 @@ alias bu='bundle update'
 
 # Fix MYSQL gem 
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
-export PATH=/opt/local/bin:/opt/local/sbin:$HOME/bin:$PATH
+export PATH=/opt/local/bin:/opt/local/sbin:$HOME/bin:$HOME/dotfiles:$PATH
 export PATH=/usr/local/bin:$PATH
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
