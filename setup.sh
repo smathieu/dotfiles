@@ -6,6 +6,8 @@ if [[ ! -x ~/.oh-my-zsh/ ]]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
+ln -sf ~/dotfiles/smathieu.zsh-theme ~/.oh-my-zsh/themes/smathieu.zsh-theme
+
 # Move dotfiles
 for dotfile in .??*; do
     if [[ -f ~/dotfile/"$dotfile" ]]; then
