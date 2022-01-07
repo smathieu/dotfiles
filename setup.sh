@@ -21,4 +21,9 @@ done
 if [[ ! -x ~/.vim ]]; then
   git clone https://github.com/smathieu/vim.git ~/.vim
   ln -sf ~/.vim/.vimrc ~/.vimrc
+  (
+    cd ~/.vim/bundle/
+    git submodule init
+    git submodule update
+  )
 fi
