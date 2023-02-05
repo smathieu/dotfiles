@@ -48,7 +48,6 @@ export PATH=/usr/local/bin:$PATH
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:/usr/local/share/npm/bin
-PATH=$PATH:/opt/dev/bin
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -63,8 +62,10 @@ fi
 
 export GOPATH=`pwd`
 
-[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
-
 [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
-[[ -f /opt/dev/dev.sh ]] && source "/opt/dev/dev.sh"
+
+if [[ -f $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh ]]; then
+    source $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh
+    source $HOMEBREW_PREFIX/opt/chruby/share/chruby/auto.sh
+fi
 
