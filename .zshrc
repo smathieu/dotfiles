@@ -43,8 +43,9 @@ alias bu='bundle update'
 
 # Fix MYSQL gem 
 #export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
-export PATH=/opt/local/bin:/opt/local/sbin:$HOME/bin:$HOME/dotfiles:$PATH
+export PATH=/opt/local/bin:/opt/local/sbin:$HOME/bin:$HOME/src/github.com/smathieu/dotfiles:$PATH
 export PATH=/usr/local/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:/usr/local/share/npm/bin
@@ -68,4 +69,8 @@ if [[ -f $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh ]]; then
     source $HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh
     source $HOMEBREW_PREFIX/opt/chruby/share/chruby/auto.sh
 fi
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
