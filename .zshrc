@@ -36,6 +36,7 @@ source $ZSH/oh-my-zsh.sh
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
 export DIFF=`which ksdiff`
+export EDITOR="vim"
 
 alias git_no_ws='git stash && git stash apply && git diff -w --no-ext-diff > foo.patch && git checkout . && git apply foo.patch && rm foo.patch'
 alias be='bundle exec'
