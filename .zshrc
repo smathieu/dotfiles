@@ -59,6 +59,10 @@ if [ -f ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
 
+if [ -f ~/.secrets ]; then
+    source ~/.secrets
+fi
+
 # added by travis gem
 [ -f /Users/simon/.travis/travis.sh ] && source /Users/simon/.travis/travis.sh
 

@@ -7,7 +7,6 @@
 --type-add=ruby=.rake
 --type-add=ruby=Rakefile
 --type-add=elixir=.exs
---ignore-dir=public
 --ignore-dir=tmp
 --ignore-dir=test_files
 --ignore-dir=coverage
@@ -23,3 +22,4 @@
 --ignore-dir=storage
 --ignore-file=is:tags
 --ignore-file=is:.phpstorm.meta.php
+--ignore-file=match:\.aider
