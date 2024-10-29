@@ -27,3 +27,13 @@ if [[ ! -x ~/.vim ]]; then
     git submodule update
   )
 fi
+
+# Setup Cursor
+CURSOR_SETTINGS="$HOME/Library/Application Support/Cursor/User/"
+
+if [[ -d "$CURSOR_SETTINGS" ]]; then
+  if [[ -f "$CURSOR_SETTINGS/settings.json" && ! -L "$CURSOR_SETTINGS/settings.json" ]]; then
+    rm "$CURSOR_SETTINGS/settings.json"
+  fi
+  ln -sf "$PWD/cursor/settings.json" "$CURSOR_SETTINGS/settings.json"
+fi

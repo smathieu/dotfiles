@@ -1,0 +1,51 @@
+{
+  "[erb]": {
+    "editor.insertSpaces": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.insertSpaces": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "cursor.cpp.disabledLanguages": ["plaintext", "markdown", "scminput"],
+  "debug.javascript.autoAttachFilter": "always",
+  "diffEditor.codeLens": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeimports": "explicit"
+  },
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.minimap.enabled": false,
+  "editor.stickyScroll.enabled": false,
+  "editor.tabSize": 2,
+  "explorer.confirmDragAndDrop": false,
+  "files.autoSave": "onFocusChange",
+  "github.copilot.enable": {
+    "*": false,
+    "markdown": false,
+    "plaintext": false,
+    "scminput": false
+  },
+  "playwright.reuseBrowser": true,
+  "rewrap.autoWrap.enabled": true,
+  "ruby.useBundler": true,
+  "ruby.useLanguageServer": true,
+  "search.useGlobalIgnoreFiles": true,
+  "vscode-run-rspec-file.custom-command": "./bin/rspec --color"
+}
